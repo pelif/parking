@@ -5,20 +5,34 @@
         </h4>
     </div>
     <div class="panel-body">
-        <table class="table-bordered">
+        <table class="table table-striped">
             <thead>
                 <tr>
                     <th class="text-center">Id</th>
                     <th class="text-center">Driver Name</th>
                     <th class="text-center">Status</th>
+                    <th class="text-center" colspan="2">Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td class="text-left">1</td>
-                    <td class="text-center">Felipe Oliveira </td>
-                    <td class="text-center">IN</td>
-                </tr>
+                {{#each cars}}
+                 <tr>
+                    <td class="text-left">{{_id}}</td>
+                    <td class="text-center">{{driver_name}}</td>
+                    <td class="text-center">{{status}}</td>
+                    <td class="text-center">
+                        <a href="/cars/edit/{{_id}}" class="btn btn-info">
+                        Edit
+                        </a>
+                    </td>
+                    <td class="text-center">
+                        <form action="/cars/{{_id}}" method="POST">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit" class="btn btn-warning">Remove</button>
+                        </form>
+                    </td>
+                </tr>   
+                {{/each}}                
             </tbody>
         </table>
     </div>

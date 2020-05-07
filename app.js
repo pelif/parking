@@ -3,6 +3,8 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var methodoverride = require('method-override');
+var hbs = require('hbs'); 
 var bodyParser = require('body-parser'); 
 var connection = require('./models'); 
 
@@ -17,12 +19,22 @@ var server = require('http').Server(app);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
+hbs.registerHelper('equals', (val1, val2, options) => {
+  return val1 == val2 ? options.fn(this) : options.inverse(this); 
+}); 
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(express.static(path.join(__dirname, 'public'))); 
+app.use(methodoverride((req, res, next) => {
+  if(req.body && typeof req.body == 'object' && req.body._method) {
+    var method = req.body._method; 
+    delete req.body._method; 
+    return method; 
+  }
+})); 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/cars', carsRouter); 
